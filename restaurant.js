@@ -13,53 +13,32 @@ var reservations = [
     PhoneNumber: "Yoda",
     Email: "Jedi Master",
     uniqueID: 2000
-  },
-  {
-    routeName: "darthmaul",
-    name: "Darth Maul",
-    role: "Sith Lord",
-    age: 200,
-    forcePoints: 1200
-  },
-  {
-    routeName: "obiwankenobi",
-    name: "Obi Wan Kenobi",
-    role: "Jedi Master",
-    age: 55,
-    forcePoints: 1350
   }
 ];
 
+var waitlist = [
+    
+]
 // Routes
 // =============================================================
 
 // Basic route that sends the user first to the AJAX Page
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "view.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/add", function(req, res) {
-  res.sendFile(path.join(__dirname, "add.html"));
+app.get("/reservation", function(req, res) {
+  res.sendFile(path.join(__dirname, "make_reservation.html"));
 });
 
-// Displays all characters
-app.get("/api/characters", function(req, res) {
-  return res.json(characters);
+// Displays all reservations
+app.get("/api/reservations", function(req, res) {
+  return res.json(reservations);
 });
 
-// Displays a single character, or returns false
-app.get("/api/characters/:character", function(req, res) {
-  var chosen = req.params.character;
-
-  console.log(chosen);
-
-  for (var i = 0; i < characters.length; i++) {
-    if (chosen === characters[i].routeName) {
-      return res.json(characters[i]);
-    }
-  }
-
-  return res.json(false);
+// Displays all reservations in the waitlist
+app.get("/api/waitlist", function(req, res) {
+  return res.json(waitlist);
 });
 
 // Create New Characters - takes in JSON input
