@@ -8,27 +8,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 var reservations = [
-  {
-    Name: "yoda",
-    PhoneNumber: "Yoda",
-    Email: "Jedi Master",
-    uniqueID: 2000
-  }
+  
 ];
 
 var waitlist = [
     
 ]
-// Routes
-// =============================================================
 
-// Basic route that sends the user first to the AJAX Page
 app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/reservation", function(req, res) {
+app.get("/add", function(req, res) {
   res.sendFile(path.join(__dirname, "make_reservation.html"));
+});
+
+app.get("/tables", function(req, res) {
+  res.sendFile(path.join(__dirname, "tables.html"));
 });
 
 // Displays all reservations
@@ -41,21 +37,13 @@ app.get("/api/waitlist", function(req, res) {
   return res.json(waitlist);
 });
 
-// Create New Characters - takes in JSON input
-app.post("/api/characters", function(req, res) {
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  var newcharacter = req.body;
-
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newcharacter.routeName = newcharacter.name.replace(/\s+/g, "").toLowerCase();
-
-  console.log(newcharacter);
-
-  characters.push(newcharacter);
-
-  res.json(newcharacter);
+app.post("/api/reservations", function(req, res) {
+  if (reservations.length < 5) {
+    reservations.push(req.body);
+  }
+  else {
+    waitlist.push(req.body);
+  }
 });
 
 // Starts the server to begin listening
