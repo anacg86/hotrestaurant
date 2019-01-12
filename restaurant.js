@@ -7,47 +7,54 @@ var PORT = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-var reservations = [
-  
-];
+var reservations = [];
 
-var waitlist = [
-    
-]
+var waitlist = [];
+// Routes
+// =============================================================
 
-app.get("/", function(req, res) {
+// Basic route that sends the user first to the AJAX Page
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/add", function(req, res) {
+app.get("/reservations", function (req, res) {
   res.sendFile(path.join(__dirname, "make_reservation.html"));
 });
 
-app.get("/tables", function(req, res) {
+app.get("/tables", function (req, res) {
   res.sendFile(path.join(__dirname, "tables.html"));
 });
-
 // Displays all reservations
-app.get("/api/reservations", function(req, res) {
+app.get("/api/reservations", function (req, res) {
   return res.json(reservations);
 });
 
 // Displays all reservations in the waitlist
-app.get("/api/waitlist", function(req, res) {
+app.get("/api/waitlist", function (req, res) {
   return res.json(waitlist);
 });
 
-app.post("/api/reservations", function(req, res) {
-  if (reservations.length < 5) {
-    reservations.push(req.body);
+// Create New Reservation - takes in JSON input
+app.post("/api/tables", function (req, res) {
+  var newreservation = req.body;
+  if (reservations.length > 4) {
+    newreservation.routeName = newreservation.uniqueID.replace(/\s+/g, "").toLowerCase();
+    console.log(newreservation);
+    waitlist.push(newreservation);
   }
   else {
-    waitlist.push(req.body);
+    newreservation.routeName = newreservation.uniqueID.replace(/\s+/g, "").toLowerCase();
+    console.log(newreservation);
+    reservations.push(newreservation);
   }
+  //manda en formato jason
+   res.json(newreservation);
 });
 
 // Starts the server to begin listening
 // =============================================================
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("App listening on PORT " + PORT);
 });
+
